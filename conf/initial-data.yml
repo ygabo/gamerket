@@ -1,0 +1,14 @@
+- &mark !!models.User
+    email:      lol@example.com
+    name:       mark
+    password:   password
+
+- &barkbark !!models.User
+    email:      bark@example.com
+    name:       barkbark
+    password:   weak
+
+- &pete !!models.User
+    email:      markmark@example.com
+    name:       pete
+    password:   pass

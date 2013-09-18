@@ -1,0 +1,11 @@
+@(users: List[User])
+
+@main("Users"){
+    <ul>
+    @users.map { user =>
+        <li data-task-id="@user.name">
+            <h4>@user.name</h4>
+        </li>
+    }
+    </ul>
+}
