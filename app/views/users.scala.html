@@ -1,11 +1,26 @@
 @(users: List[User])
 
-@main("Users"){
-    <ul>
-    @users.map { user =>
-        <li data-task-id="@user.name">
-            <h4>@user.name</h4>
-        </li>
-    }
-    </ul>
-}
+
+    <html>
+        <head>
+            <title>Gamerket</title>
+            <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+            <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+        </head>
+        <body>
+            <header>
+                <a href="@routes.Application.index" id="logo"><span>Gamer</span>Ket</a>
+            </header>
+
+            <p>
+                <ul>
+                @users.map { user =>
+                    <li data-task-id="@user.name">
+                        <h4>@user.name</h4>
+                    </li>
+                }
+                </ul>
+            </p>
+
+        </body>
+    </html>
