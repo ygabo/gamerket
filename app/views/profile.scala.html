@@ -2,9 +2,9 @@
 
 @import com.feth.play.module.pa.views.html._
 
-@main(Messages("playauthenticate.profile.title"),"profile") {
+@main(Messages("gamerket.profile.title"),"profile") {
     
-    <h1>@Messages("playauthenticate.profile.title")</h1>
+    <h1>@Messages("gamerket.profile.title")</h1>
     <p>
     Your name is @localUser.name and your email address is @if(!localUser.email) {<em>&lt;unknown&gt;</em>.} else {
     	@localUser.email.
@@ -21,9 +21,9 @@
     @defining(localUser.getProviders()) { providers =>
         @if(providers.size() > 0) {
         @if(providers.size() ==1) {
-            @Messages("playauthenticate.profile.providers_one")
+            @Messages("gamerket.profile.providers_one")
         } else {
-            @Messages("playauthenticate.profile.providers_many",providers.size().toString())
+            @Messages("gamerket.profile.providers_many",providers.size().toString())gamerket
         }
         @for(p <- providers) {
             @_providerIcon(p)
@@ -34,16 +34,16 @@
     
     <br/>
     @currentAuth() { auth =>
-        @Messages("playauthenticate.profile.logged") @_providerIcon(auth.getProvider())<br/>
+        @Messages("gamerket.profile.logged") @_providerIcon(auth.getProvider())<br/>
         @if(auth.expires() != -1){
-            @Messages("playauthenticate.profile.session", auth.getId(), Application.formatTimestamp(auth.expires()))
+            @Messages("gamerket.profile.session", auth.getId(), Application.formatTimestamp(auth.expires()))
         } else {
-            @Messages("playauthenticate.profile.session_endless", auth.getId())
+            @Messages("gamerket.profile.session_endless", auth.getId())
         }
     }
     <br/>
     <ul>
-    	<li><a href="@routes.Account.changePassword">@Messages("playauthenticate.profile.password_change")</a></li>
+    	<li><a href="@routes.Account.changePassword">@Messages("gamerket.profile.password_change")</a></li>
     </ul>
     </p>
 }

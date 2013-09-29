@@ -4,12 +4,12 @@
 @import helper.twitterBootstrap._
 
 @label = {
-	@Messages("playauthenticate.merge.accounts.question",aUser,bUser)
+	@Messages("gamerket.merge.accounts.question",aUser,bUser)
 }
 
-@main(Messages("playauthenticate.merge.accounts.title")) {
+@main(Messages("gamerket.merge.accounts.title")) {
 
-	<h1>@Messages("playauthenticate.merge.accounts.title")</h1>
+	<h1>@Messages("gamerket.merge.accounts.title")</h1>
 	<p>
 	@form(routes.Account.doMerge) {
 
@@ -22,14 +22,14 @@
 	   @inputRadioGroup(
             acceptForm("accept"),
             options = Seq(
-            	"true"-> Messages("playauthenticate.merge.accounts.true"),
-            	"false"->Messages("playauthenticate.merge.accounts.false")
+            	"true"-> Messages("gamerket.merge.accounts.true"),
+            	"false"->Messages("gamerket.merge.accounts.false")
             ),
             '_label -> label,
             '_showConstraints -> false
         )
            
-		<input type="submit" value="@Messages("playauthenticate.merge.accounts.ok")" class="btn btn-primary">
+		<input type="submit" value="@Messages("gamerket.merge.accounts.ok")" class="btn btn-primary">
 	}
 	</p>
 }

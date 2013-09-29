@@ -4,12 +4,12 @@
 @import helper.twitterBootstrap._
 
 @label = {
-	@_providerIcon(newAccount.getProvider()) @Messages("playauthenticate.link.account.question",newAccount)
+	@_providerIcon(newAccount.getProvider()) @Messages("gamerket.link.account.question",newAccount)
 }
 
-@main(Messages("playauthenticate.link.account.title")) {
+@main(Messages("gamerket.link.account.title")) {
 
-	<h1>@Messages("playauthenticate.link.account.title")</h1>
+	<h1>@Messages("gamerket.link.account.title")</h1>
 	<p>
 	@form(routes.Account.doLink) {
 	   
@@ -22,14 +22,14 @@
 	   @inputRadioGroup(
             acceptForm("accept"),
             options = Seq(
-            	"true"-> Messages("playauthenticate.link.account.true"),
-            	"false"->Messages("playauthenticate.link.account.false")
+            	"true"-> Messages("gamerket.link.account.true"),
+            	"false"->Messages("gamerket.link.account.false")
             ),
             '_label -> label,
             '_showConstraints -> false
         )
            
-		<input type="submit" value="@Messages("playauthenticate.link.account.ok")" class="btn btn-primary"> 
+		<input type="submit" value="@Messages("gamerket.link.account.ok")" class="btn btn-primary"> 
 	}
 	</p>
 }
