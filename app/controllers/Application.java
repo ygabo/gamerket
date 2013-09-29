@@ -1,54 +1,129 @@
 package controllers;
 
-import play.*;
-import play.api.templates.Html;
-import play.mvc.*;
-import play.data.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import views.html.*;
-import models.*;
+import models.User;
+import play.Routes;
+import play.data.Form;
+import play.mvc.*;
+import play.mvc.Http.Response;
+import play.mvc.Http.Session;
+import play.mvc.Result;
+import providers.MyUsernamePasswordAuthProvider;
+import providers.MyUsernamePasswordAuthProvider.MyLogin;
+import providers.MyUsernamePasswordAuthProvider.MySignup;
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+
+import com.feth.play.module.pa.PlayAuthenticate;
+import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
+import com.feth.play.module.pa.user.AuthUser;
+
+import java.util.AbstractList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import com.feth.play.module.pa.PlayAuthenticate;
+import views.html.restricted;
+import views.html.index;
+import views.html.signup;
+import views.html.login;
+import views.html.profile;
 
 public class Application extends Controller {
-  
+
+    public static final String FLASH_MESSAGE_KEY = "message";
+    public static final String FLASH_ERROR_KEY = "error";
+    public static final String USER_ROLE = "user";
+
     public static Result index() {
-        return ok(index.render("hi"));
+        return ok(index.render());
+    }
+//    public static Result asyncusers(){
+//        F.Promise<List<User>> x = play.libs.Akka.future(
+//                new Callable<List<User>>(){
+//                    public List<User> call(){
+//                        return User.find.all();
+//                    }
+//                }
+//        );
+//
+//        return async(
+//                x.map(
+//                        new F.Function<List<User>, Result>(){
+//                            public Result apply(List<User> i){
+//                                return ok(users.render(i));
+//                            }
+//                        }
+//                       )
+//        );
+//    }
+
+    public static User getLocalUser(final Session session) {
+        final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
+        final User localUser = User.findByAuthUserIdentity(currentAuthUser);
+        return localUser;
     }
 
-    public static Result users() {
-        return ok(users.render(User.find.all()));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result restricted() {
+        final User localUser = getLocalUser(session());
+        return ok(restricted.render(localUser));
     }
 
-    public static Result login(){
-        // this referencese the inner login class below
-        return ok(login.render(Form.form(Login.class)));
+    @Restrict(@Group(Application.USER_ROLE))
+    public static Result profile() {
+        final User localUser = getLocalUser(session());
+        return ok(profile.render(localUser));
     }
 
-    public static Result authenticate(){
-        Form<Login> loginForm = Form.form(Login.class).bindFromRequest();
+    public static Result login() {
+        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+    }
 
-        // hasErrors is from Form class in Play
-        // just need to implement "validate" function to use it
-        if( loginForm.hasErrors()){
-            return badRequest(login.render(loginForm));
+    public static Result doLogin() {
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
+                .bindFromRequest();
+        if (filledForm.hasErrors()) {
+            // User did not fill everything properly
+            return badRequest(login.render(filledForm));
+        } else {
+            // Everything was filled
+            return UsernamePasswordAuthProvider.handleLogin(ctx());
         }
-        else{
-            // create a new session for the guy who just logged in
-            // "email" string is just a key
-            session().clear();
-            session("email", loginForm.get().email);
-            return redirect(routes.Application.index());
+    }
+
+    public static Result signup() {
+        return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
+    }
+
+    public static Result jsRoutes() {
+        return ok(
+                Routes.javascriptRouter("jsRoutes",
+                        controllers.routes.javascript.Signup.forgotPassword()))
+                .as("text/javascript");
+    }
+
+    public static Result doSignup() {
+        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+        final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
+                .bindFromRequest();
+        if (filledForm.hasErrors()) {
+            // User did not fill everything properly
+            return badRequest(signup.render(filledForm));
+        } else {
+            // Everything was filled
+            // do something with your part of the form before handling the user
+            // signup
+            return UsernamePasswordAuthProvider.handleSignup(ctx());
         }
     }
 
-    public static class Login {
-        public String email;
-        public String password;
-
-        public String validate(){
-            if( User.authenticate(email, password) == null){
-                return "Invalid email/password.";
-            }
-            return null;
-        }
+    public static String formatTimestamp(final long t) {
+        return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
     }
+
 }

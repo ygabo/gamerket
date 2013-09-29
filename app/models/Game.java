@@ -36,16 +36,6 @@ public class Game extends Model{
         this.developer = developer;
     }
 
-    // create a game with the following properties
-    public static Game create(String title, Date release, String developer){
-        User s = User.find.ref(developer);
-        System.out.println();System.out.println();System.out.println();System.out.println("----------");
-        System.out.println(s.name + " " + s.email);System.out.println("----------");
-        Game game = new Game(title, release, s);
-        game.save();
-        return game;
-    }
-
     // find the games made by the dev with a name "dev_name"
     public static List<Game> findDevelopedBy(String dev_name){
         // fetch all games with developers that have dev_name
